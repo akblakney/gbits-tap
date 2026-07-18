@@ -24,6 +24,8 @@ main.py).
 
 import logging
 import os
+from pathlib import Path
+from datetime import date
 
 _DEFAULT_LEVEL = "INFO"
 _ENV_VAR = "TAP_LOG_LEVEL"
@@ -46,10 +48,11 @@ def configure_logging(level: str | None = None) -> None:
         return
 
     log_dir = LOG_BASE_DIR
+    log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / f"{date.today():%Y-%m-%d}.log"
 
     logging.basicConfig(
-        filename=log_file
+        filename=log_file,
         level=numeric_level,
         format="%(asctime)s %(levelname)-8s %(name)s: %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S",

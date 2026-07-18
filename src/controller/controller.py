@@ -14,6 +14,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from service.tap_service import TapService, RateLimitExceededError
 from client.wellspring_client import WellspringUnavailableError
+from util.client_ip import get_client_ip
+from controller.request_logging_middleware import RequestLoggingMiddleware
 
 logger = logging.getLogger(__name__)
 
@@ -21,20 +23,17 @@ logger = logging.getLogger(__name__)
 def create_app(tap_service: TapService) -> FastAPI:
     app = FastAPI(title="Tap")
 
+    # Order matters: middleware registered LAST wraps OUTERMOST, so it
+    # sees the request first / response last. Logging is added last so
+    # it captures the true final status code (e.g. after CORS handling)
+    # and full end-to-end latency.
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
         allow_methods=["GET"],
         allow_headers=["*"],
     )
-
-    def get_client_ip(request: Request) -> str:
-        forwarded = request.headers.get("x-forwarded-for")
-        if forwarded:
-            # X-Forwarded-For can be a comma-separated chain if multiple
-            # proxies are involved; the first entry is the original client.
-            return forwarded.split(",")[0].strip()
-        return request.client.host if request.client else "unknown"
+    app.add_middleware(RequestLoggingMiddleware)
 
     def call(service_fn: Callable[..., tuple[int, dict[str, Any]]], *args: Any) -> JSONResponse:
         """
