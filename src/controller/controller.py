@@ -93,4 +93,9 @@ def create_app(tap_service: TapService) -> FastAPI:
         # monitoring independent of VPN/Wellspring status.
         return {"status": "ok", "service": "tap"}
 
+    @app.get("/health/wellspring")
+    def handle_health_wellspring():
+        ip = get_client_ip(request)
+        return call(tap.service.get_wellspring_health, ip)
+
     return app

@@ -50,7 +50,13 @@ class TapService:
         self._check_rate_limit(client_ip)
         return self._wellspring_client.get_metrics()
 
+    def get_wellspring_health(self, client_ip: str) -> tuple[int, dict[str, Any]]:
+        self._check_rate_limit(client_ip)
+        return self._wellspring_client.get_wellspring_health()
+
     def _check_rate_limit(self, client_ip: str) -> None:
         if not self._rate_limiter.allow(client_ip):
             logger.warning("Rate limit exceeded for %s", client_ip)
             raise RateLimitExceededError(f"Rate limit exceeded for {client_ip}")
+
+

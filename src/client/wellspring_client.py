@@ -47,6 +47,9 @@ class WellspringClient:
     def get_metrics(self) -> tuple[int, dict[str, Any]]:
         return self._get("/metrics")
 
+    def get_wellspring_health(self) -> tuple[int, dict[str, Any]]:
+        return self._get("/health")
+
     def _get(self, path: str, params: dict[str, Any] | None = None) -> tuple[int, dict[str, Any]]:
         """
         Returns (status_code, json_body) 
