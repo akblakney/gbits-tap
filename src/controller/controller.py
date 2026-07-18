@@ -94,8 +94,8 @@ def create_app(tap_service: TapService) -> FastAPI:
         return {"status": "ok", "service": "tap"}
 
     @app.get("/health/wellspring")
-    def handle_health_wellspring():
+    def handle_health_wellspring(request: Request):
         ip = get_client_ip(request)
-        return call(tap.service.get_wellspring_health, ip)
+        return call(tap_service.get_wellspring_health, ip)
 
     return app
