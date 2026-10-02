@@ -26,6 +26,10 @@ class TapService:
         self._check_rate_limit(client_ip)
         return self._wellspring_client.get_bits(num_bytes, plot)
 
+    def get_visualize_walk(self, client_ip: str) -> tuple[int, dict[str,Any]]:
+        self._check_rate_limit(client_ip)
+        return self._wellspring_client.get_visualize_walk()
+
     def get_beacon_latest(self, client_ip: str) -> tuple[int, dict[str, Any]]:
         self._check_rate_limit(client_ip)
         return self._wellspring_client.get_beacon_latest()
