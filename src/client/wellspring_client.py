@@ -30,7 +30,7 @@ class WellspringClient:
         return self._get("/bits", params={"num_bytes": num_bytes, "plot": plot})
 
     def get_visualize_walk(self, visualize: bool = False) -> tuple[int, dict[str, Any]]:
-        return self._get("/visualize/walk", params={"visualize": visualize})
+        return self._get("/latest-chunk", params={"visualize": visualize})
 
     def get_beacon_latest(self) -> tuple[int, dict[str, Any]]:
         return self._get("/beacon/latest")
