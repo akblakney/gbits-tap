@@ -55,10 +55,10 @@ def create_app(tap_service: TapService) -> FastAPI:
         ip = get_client_ip(request)
         return call(tap_service.get_bits, ip, num_bytes, plot)
 
-    @app.get("/visualize/walk")
-    def handle_visualize_walk(request: Request):
+    @app.get("/latest-chunk")
+    def handle_visualize_walk(request: Request, visualize: bool = False):
         ip = get_client_ip(request)
-        return call(tap_service.get_visualize_walk, ip)
+        return call(tap_service.get_visualize_walk, ip, visualize)
 
     @app.get("/beacon/latest")
     def handle_get_beacon_latest(request: Request):
